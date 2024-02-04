@@ -1,0 +1,38 @@
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: Maven@4
+  inputs:
+    mavenPomFile: 'pom.xml'
+    publishJUnitResults: true
+    testResultsFiles: '**/surefire-reports/TEST-*.xml'
+    javaHomeOption: 'JDKVersion'
+    mavenVersionOption: 'Default'
+    mavenAuthenticateFeed: false
+    effectivePomSkip: false
+    sonarQubeRunAnalysis: false
+
+- task: Docker@2
+  inputs:
+    containerRegistry: 'docker-hub'
+    repository: 'devopsmela/case-1-springboot'
+    command: 'buildAndPush'
+    Dockerfile: '**/Dockerfile'
+    addPipelineData: false
+    addBaseImageData: false
+
+- task: CopyFiles@2
+  inputs:
+    SourceFolder: 'manifests/'
+    Contents: '**'
+    TargetFolder: '$(build.artifactstagingdirectory)'
+    
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(build.artifactstagingdirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
