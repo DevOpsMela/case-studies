@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "node-js.fullname" . }}-app-node-js
+  labels:
+  {{- include "node-js.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.appNodeJs.replicas }}
+  selector:
+    matchLabels:
+      app: my-app-node-js
+    {{- include "node-js.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app: my-app-node-js
+      {{- include "node-js.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+      - env:
+        - name: KUBERNETES_CLUSTER_DOMAIN
+          value: {{ quote .Values.kubernetesClusterDomain }}
+        image: {{ .Values.appNodeJs.myImageNodeJs.image.repository }}:{{ .Values.appNodeJs.myImageNodeJs.image.tag
+          | default .Chart.AppVersion }}
+        name: my-image-node-js
+        ports:
+        - containerPort: 5000
+        resources: {}

@@ -1,0 +1,12 @@
+appDeployment:
+  myImage:
+    image:
+      repository: devopsmela/java-numeric-app
+      tag: latest
+  replicas: 1
+kubernetesClusterDomain: cluster.local
+myService:
+  ports:
+  - port: 8080
+    targetPort: 0
+  type: LoadBalancer

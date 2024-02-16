@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "java-springboot.fullname" . }}-my-service
+  labels:
+  {{- include "java-springboot.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.myService.type }}
+  selector:
+    app: my-app
+  {{- include "java-springboot.selectorLabels" . | nindent 4 }}
+  ports:
+	{{- .Values.myService.ports | toYaml | nindent 2 -}}

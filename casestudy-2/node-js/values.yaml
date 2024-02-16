@@ -1,0 +1,12 @@
+appNodeJs:
+  myImageNodeJs:
+    image:
+      repository: devopsmela/node-js
+      tag: v1
+  replicas: 1
+kubernetesClusterDomain: cluster.local
+nodeService:
+  ports:
+  - port: 5000
+    targetPort: 0
+  type: NodePort
